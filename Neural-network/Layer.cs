@@ -5,12 +5,14 @@ namespace Neural_network
 {
     public class Layer
     {
+        public NeuronType Type;
         public List<Neuron> Neurons { get; }
-        public int Count => Neurons?.Count ?? 0;
+        public int NeuronCount => Neurons?.Count ?? 0;
 
         public Layer(List<Neuron> neurons, NeuronType type = NeuronType.Normal)
         {
-            Neurons = neurons;
+            Type = type;
+            Neurons = neurons;  
         }
 
         public List<double> GetSignals()
@@ -23,6 +25,11 @@ namespace Neural_network
             }
 
             return result;
+        }
+
+        public override string ToString()
+        {
+            return Type.ToString();
         }
     }
 }
