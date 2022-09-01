@@ -38,7 +38,6 @@ namespace Neural_network
         public double Learn(double[] expected, double[,] inputs, int epoch)
         {
             var error = 0.0;
-
             for (int i = 0; i < epoch; i++)
             {
                 for (int j = 0; j < expected.Length; j++)
@@ -49,8 +48,8 @@ namespace Neural_network
                     error += BackPropagation(output, input);
                 }
             }
-
             var result = error / epoch;
+
             return result;
         }
 
