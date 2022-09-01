@@ -8,7 +8,8 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            var dataSet = new List<Tuple<double, double[]>>
+            var outputs = new double[] { 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1 };
+            var inputs = new double[,]
             {
                 /*
                  * Result: 1 - traffic jams
@@ -19,39 +20,42 @@ namespace Test
                  * (W) - Workday
                  * (S) - Servicebility of traffic lights
                  * 
-                 *                                            R  D  W  S
+                 *   R  D  W  S
                  */                                           
-                new Tuple<double, double[]> (0, new double[] {0, 0, 0, 0}),
-                new Tuple<double, double[]> (0, new double[] {0, 0, 0, 1}),
-                new Tuple<double, double[]> (1, new double[] {0, 0, 1, 0}),
-                new Tuple<double, double[]> (0, new double[] {0, 0, 1, 1}),
-                new Tuple<double, double[]> (0, new double[] {0, 1, 0, 0}),
-                new Tuple<double, double[]> (0, new double[] {0, 1, 0, 1}),
-                new Tuple<double, double[]> (1, new double[] {0, 1, 1, 0}),
-                new Tuple<double, double[]> (0, new double[] {0, 1, 1, 1}),
-                new Tuple<double, double[]> (1, new double[] {1, 0, 0, 0}),
-                new Tuple<double, double[]> (1, new double[] {1, 0, 0, 1}),
-                new Tuple<double, double[]> (1, new double[] {1, 0, 1, 0}),
-                new Tuple<double, double[]> (1, new double[] {1, 0, 1, 1}),
-                new Tuple<double, double[]> (1, new double[] {1, 1, 0, 0}),
-                new Tuple<double, double[]> (0, new double[] {1, 1, 0, 1}),
-                new Tuple<double, double[]> (1, new double[] {1, 1, 1, 0}),
-                new Tuple<double, double[]> (1, new double[] {1, 1, 1, 1}),
+                    {0, 0, 0, 0},
+                    {0, 0, 0, 1},
+                    {0, 0, 1, 0},
+                    {0, 0, 1, 1},
+                    {0, 1, 0, 0},
+                    {0, 1, 0, 1},
+                    {0, 1, 1, 0},
+                    {0, 1, 1, 1},
+                    {1, 0, 0, 0},
+                    {1, 0, 0, 1},
+                    {1, 0, 1, 0},
+                    {1, 0, 1, 1},
+                    {1, 1, 0, 0},
+                    {1, 1, 0, 1},
+                    {1, 1, 1, 0},
+                    {1, 1, 1, 1},
             };
 
             var topology = new Topology(4, 1, 0.1, 2);
             var neuralNetwork = new NeuralNetwork(topology);
-            var difference = neuralNetwork.Learn(dataSet, 100000);
-            var results = new List<double>();
+            var difference = neuralNetwork.Learn(outputs, inputs, 100000);
 
-            foreach (var data in dataSet)
+            var results = new List<double>();
+            for (int i = 0; i < outputs.Length; i++)
             {
-                results.Add(neuralNetwork.FeedForward(data.Item2).Output);
+                var row = NeuralNetwork.GetRow(inputs, i);
+                var res = neuralNetwork.FeedForward(row).Output;
+
+                results.Add(res);
             }
 
             for (int i = 0; i < results.Count; i++)
             {
-                var expected = Math.Round(dataSet[i].Item1, 4);
+                var expected = Math.Round(outputs[i], 4);
                 var actualValue = Math.Round(results[i], 4);
                 //var areEqual = Equals(expected, actualValue);
 
